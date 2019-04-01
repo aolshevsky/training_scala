@@ -13,8 +13,8 @@ object Fibonacci {
     msg.format(name, n, f(n))
   }
 
-def main(args: Array[String]): Unit =
-  println("Hello, world!")
+  def main(args: Array[String]): Unit =
+    println("Hello, world!")
 }
 
 object PolymorphicFunctions {
@@ -29,7 +29,7 @@ object PolymorphicFunctions {
     loop(0)
   }
 
-  //exercise 2.2
+  // exercise 2.2
   def isSorted[A](as: Array[A], ordered: (A, A) => Boolean): Boolean = {
     @annotation.tailrec
     def loop(i: Int): Boolean =
@@ -40,8 +40,15 @@ object PolymorphicFunctions {
     loop(0)
   }
 
-  //exercise 2.3
+  // exercise 2.3
   def curry[A, B, C](f: (A, B) => C): A => (B => C) = 
     (a: A) => (b: B) => f(a, b)
   
+  // exercise 2.4
+  def uncurry[A, B, C](f: A => B => C): (A, B) => C =
+    (a: A, b: B) => f(a)(b)
+  
+  // exercise 2.5
+  def compose[A, B, C](f: B => C, g: A => B): A => C =
+    (a: A) => f(g(a))
 }
