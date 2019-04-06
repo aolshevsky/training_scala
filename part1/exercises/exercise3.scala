@@ -74,11 +74,36 @@ object List {
     foldRight(l, 0)((_, b) => b + 1)
   }
 
-
   // exercise 3.10
   def foldLeft[A, B](l: List[A], z: B)(f: (B, A) => B): B = l match {
     case Nil => z
     case Cons(x, xs) => foldLeft(xs, f(z, x))(f)
+  }
+
+  // exercise 3.11
+  def sumL(l: List[Int]) = {
+    foldLeft(l, 0)(_ + _)
+  }
+
+  def productL(l: List[Int]) = {
+    foldLeft(l, 1)(_ * _)
+  }
+
+  // exercise 3.12
+  def reverse[A](l: List[A]) = {
+    foldLeft(l, Nil: List[A])((x, y) => Cons(y, x))
+  }
+
+  // exercise 3.13 ??
+
+  // exercise 3.14
+  def appendByFoldRight[A](l: List[A], r: List[A]): List[A] = {
+    foldRight(l, r)(Cons(_, _))
+  }
+
+  // exercise 3.15
+  def concat[A](l: List[List[A]]): List[A] = {
+    foldRight(l, Nil: List[A])(appendByFoldRight)
   }
 
   def main(args: Array[String]): Unit = {
@@ -116,5 +141,21 @@ object List {
 
     val l = List(1, 2, 3, 4, 5)
     println(List.foldLeft(l, 10)(_ + _)) // 25
+    
+     // test exercise 3.11
+     println(List.sumL(l))
+     println(List.productL(l))
+ 
+     // test exercise 3.12
+     println(List.reverse(l))
+ 
+     // test exercise 3.14
+     println(List.appendByFoldRight(l, l))
+ 
+     // test exercise 3.15
+     val lOfL = List(
+       List(1, 2, 3), Nil, List(4, 5, 6), List(), List(7, 8)
+     )
+     println(List.concat(lOfL))
   }
 }
