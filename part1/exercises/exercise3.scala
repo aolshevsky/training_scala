@@ -106,6 +106,31 @@ object List {
     foldRight(l, Nil: List[A])(appendByFoldRight)
   }
 
+  // exercise 3.16
+  def addOne(l: List[Int]): List[Int] = {
+    foldRight(l, Nil: List[Int])((x, xs) => Cons(x + 1, xs))
+  }
+
+  // exercise 3.17
+  def doubleToString(l: List[Double]): List[String] = {
+    foldRight(l, Nil: List[String])((x, xs) => Cons(x.toString, xs))
+  }
+
+  // exercise 3.18
+  def map[A,B](l: List[A])(f: A => B): List[B] = {
+    foldRight(l, Nil: List[B])((x, xs) => Cons(f(x), xs))
+  }
+
+  // exercise 3.19
+  def filter[A](l: List[A])(f: A => Boolean): List[A] = {
+    foldRight(l, Nil: List[A])((x, xs) => if (f(x)) Cons(x, xs) else xs)
+  }
+
+  // exercise 3.20
+  def flatMap[A, B](l: List[A])(f: A => List[B]): List[B] = {
+    concat(map(l)(f))
+  }
+
   def main(args: Array[String]): Unit = {
     val ex1 : List[Double] = Nil
     val ex2: List[Int] = List(1,2,3,4,5)
@@ -141,7 +166,7 @@ object List {
 
     val l = List(1, 2, 3, 4, 5)
     println(List.foldLeft(l, 10)(_ + _)) // 25
-    
+
      // test exercise 3.11
      println(List.sumL(l))
      println(List.productL(l))
@@ -157,5 +182,20 @@ object List {
        List(1, 2, 3), Nil, List(4, 5, 6), List(), List(7, 8)
      )
      println(List.concat(lOfL))
+
+    // test exercise 3.16
+    println(List.addOne(l))
+
+    // test exercise 3.17
+    println(List.doubleToString(ex4))
+
+    // test exercise 3.18
+    println(List.map(l)((i: Int) => i + 1))
+
+    // test exercise 3.19
+    println(List.filter(l)((i: Int) => i % 2 == 0))
+
+    // test exercise 3.20
+    println(List.flatMap(List(1,2,3))(i => List(i, i)))
   }
 }
