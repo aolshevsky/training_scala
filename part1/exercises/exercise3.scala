@@ -131,6 +131,31 @@ object List {
     concat(map(l)(f))
   }
 
+  // exercise 3.21
+  def filterByFlatMap[A](l: List[A])(f: A => Boolean): List[A] = {
+    flatMap(l)(a => if (f(a)) List(a) else Nil)
+  }
+
+  // exercise 3.22
+  def sum_lists(a: List[Int], b: List[Int]): List[Int] = (a, b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(x, xs), Cons(y, ys)) => Cons(x + y, sum_lists(xs, ys))
+  }
+
+  // exercise 3.23
+  def zipWith[A, B, C](a: List[A], b: List[B])(f: (A, B) => C): List[C] = (a, b) match {
+    case (Nil, _) => Nil
+    case (_, Nil) => Nil
+    case (Cons(x, xs), Cons(y, ys)) => Cons(f(x, y), zipWith(xs, ys)(f))
+  }
+
+  // exercise 3.24 ---
+  def hasSubsequence[A](sup: List[A], sub: List[A]): Boolean = sup match {
+    case Nil => sub == Nil
+    case Cons(_, xs) => hasSubsequence(xs, sub)
+  }
+
   def main(args: Array[String]): Unit = {
     val ex1 : List[Double] = Nil
     val ex2: List[Int] = List(1,2,3,4,5)
@@ -197,5 +222,14 @@ object List {
 
     // test exercise 3.20
     println(List.flatMap(List(1,2,3))(i => List(i, i)))
+    
+    // test exercise 3.21
+    println(List.filterByFlatMap(l)(isEven))
+
+    // test exercise 3.22
+    println(List.sum_lists(l, l)) // 2, 4, 6...
+
+    // test exercise 3.23
+    println(List.zipWith(l, l)(_ * _)) // 1, 4, 9...
   }
 }
