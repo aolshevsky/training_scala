@@ -51,6 +51,28 @@ abstract class Stream[+A] {
     def takeWhileByFoldRight(p: A => Boolean): Stream[A] = {
       foldRight(Stream.empty[A])((a, b) => if (p(a)) Stream.cons(a, b) else Stream.empty)
     }
+  
+    // exercise 5.6 (hard)
+    def headOptionByFoldRight: Option[A] = {
+      foldRight(None: Option[A])((a, _) => Some(a))
+    }
+  
+    // exercise 5.7
+    def map[B](f: A => B): Stream[B] = {
+      foldRight(Stream.empty: Stream[B])((a, b) => Stream.cons(f(a), b))
+    }
+  
+    def filter(f: A => Boolean): Stream[A] = {
+      foldRight(Stream.empty: Stream[A])((a, b) => if (f(a)) Stream.cons(a, b) else b)
+    }
+  
+    def append[B >: A](s: Stream[B]): Stream[B] = {
+      foldRight(s)((a, b) => Stream.cons(a, b))
+    }
+  
+    def flatMap[B](f: A => Stream[B]): Stream[B] = {
+      foldRight(Stream.empty: Stream[B])((a, b) => f(a).append(b))
+    }
   }
   case object Empty extends Stream[Nothing]
   case class Cons[+A](h: () => A, t: () => Stream[A]) extends Stream[A]
@@ -78,6 +100,24 @@ abstract class Stream[+A] {
   
     val ones: Stream[Int] = Stream.cons(1, ones)
   
+    // exercise 5.8
+    def constant[A](a: A): Stream[A] = {
+      lazy val tail: Stream[A] = Cons(() => a, () => tail)
+      tail
+    }
+  
+    // exercise 5.9
+    def from(n: Int): Stream[Int] = {
+      cons(n, from(n + 1))
+    }
+  
+    // exercise 5.10
+    def fibs(): Stream[Int] = {
+      def loop(i1: Int, i2: Int): Stream[Int] = {
+        cons(i1, loop(i2, i1 + i2))
+      }
+      loop(0, 1)
+    }
   
     def main(args: Array[String]): Unit = {
       println(List(1, 2, 3, 4).map(_ + 10).filter(_ % 2 == 0).map(_ * 3))
@@ -115,5 +155,17 @@ abstract class Stream[+A] {
       // test exercise 5.5
       val p2 = (i: Int) => i%3==0
       println(s.takeWhileByFoldRight(p2).toList)
+  
+      // test exercise 5.6
+      println(s.headOption)
+  
+      // test exercise 5.7
+      println(Stream(1,2,3,4).map(_ + 10).filter(_ % 2 == 0).append(Stream(33)).toList)
+      println(12 :: Stream(3,4).map(_ + 10).filter(_ % 2 == 0).toList)
+  
+      println(ones.take(5).toList)
+      println(ones.take(5).map(_ + 1).toList)
+  
+      println(from(5).headOption)
     }
   }
